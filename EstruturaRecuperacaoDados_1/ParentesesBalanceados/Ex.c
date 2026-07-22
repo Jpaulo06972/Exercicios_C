@@ -1,80 +1,82 @@
-#include <stdio.h> // Para funções de entrada/saída (printf, scanf).
-#include <stdlib.h> // Para alocação de memória (malloc, free).
-#include <string.h> // Para manipulação de strings (strcpy).
-#include <stdbool.h> // Para usar o tipo 'bool' (true, false).
-#include <ctype.h> // Para manipulação de caracteres (não usado aqui, mas estava no original).
+#include <stdio.h>  // Entrada e saída padrão (printf, scanf).
+#include <stdlib.h> // Alocação dinâmica de memória (malloc, free).
+#include <string.h> // Manipulação de strings.
+#include <stdbool.h>// Tipo booleano (bool, true, false).
+#include <ctype.h>  // Manipulação de caracteres.
 
-// Estrutura para guarda os parentese da expressao
+// Estrutura do nó da pilha para armazenar caracteres de abertura ('(', '{', '[').
 typedef struct Expressao{
-    char guarda;
-    
-    struct Expressao* next;
+    char guarda;            // Caractere do símbolo de abertura armazenado.
+    struct Expressao* next; // Ponteiro para o próximo nó abaixo na pilha.
 } Expressao;
 
-// Estrutura da pilha
+// Estrutura descritora da Pilha.
 typedef struct Pilha{
-    Expressao* top;
+    Expressao* top; // Ponteiro para o topo da pilha.
 } Pilha;
 
-// Funcao para criar um novo no
+// Aloca dinamicamente e inicializa um nó da pilha com o caractere informado.
 Expressao* create_no(char value){
-    Expressao*  new_no = (Expressao*) malloc(sizeof(Expressao));
+    Expressao* new_no = (Expressao*) malloc(sizeof(Expressao));
     new_no->guarda = value;
     new_no->next = NULL;
     return new_no;
 }
 
-// Push - Insere um novo elemento na fila 
+// Operação PUSH: Insere um novo símbolo de abertura no TOPO da pilha.
 Pilha* push(Pilha* p, char value){
-    Expressao* new_no = create_no(value); // Chama funcao para criacao do novo no
-    new_no->next = p->top; // Aponta o next do novo no para o anterior
-    p->top = new_no; // Faz o topo apontar para o novo no criado
-    return p; // Retorna a pilha atualizada
+    Expressao* new_no = create_no(value); // Cria o nó alocado dinamicamente.
+    new_no->next = p->top;                // O novo nó aponta para o antigo topo.
+    p->top = new_no;                      // Atualiza o topo da pilha para o novo nó.
+    return p;                             // Retorna a pilha modificada.
 }
 
-// Pop - Remove o primeiro da fila 
+// Operação POP: Desempilha (remove) o símbolo do TOPO da pilha.
 Pilha* pop(Pilha* p){
-    if (p->top == NULL) return p; // Ocorre quando a pilha está vazia
-    Expressao* temp = p->top; // Associa o no temporario ao no que vai ser removido
-    p->top = p->top->next; // Aponta o top para o proximo da pilha 
-    free(temp); // Limpa a memoria temporaria
-    return p; // Retorna a pilh atualizada
+    // Tratamento de segurança para evitar erro ao desempilhar pilha vazia.
+    if (p->top == NULL) return p; 
+    
+    Expressao* temp = p->top; // Guarda a referência do topo atual.
+    p->top = p->top->next;    // Avança o topo para o elemento de baixo.
+    free(temp);               // Libera a memória do antigo topo.
+    return p;                 // Retorna a pilha atualizada.
 }
 
-// Free - Limpa a pilha
+// Libera toda a memória alocada para os nós da pilha.
 void free_pilha(Pilha* p){
-    Expressao* current = p->top; // Cria uma pilha temporaria 
-    while (current != NULL){ // Enquanto a pilha nao estiver vazia 
-        Expressao* temp = current; // Cria o temporaria dentro do while
-        current = current->next; // Aponta para o próximo da pilha
-        free(temp); // Limpa a memoria do temporario
+    Expressao* current = p->top;
+    
+    // Itera desempilhando e desalocando cada nó da pilha.
+    while (current != NULL){ 
+        Expressao* temp = current;
+        current = current->next;
+        free(temp);
     }
-    free(p); // Limpa o topo   
+    // Desaloca a própria estrutura descritora da pilha.
+    free(p);
 }
 
-// Mostra o elementos da pilha
+// Função utilitária para imprimir o conteúdo visual atual da pilha.
 void print_pilha(Pilha* p){
     Expressao* current = p->top;
     printf("Pilha: ");
     while (current != NULL){
-        printf("%d", current->guarda);
+        printf("%c", current->guarda); // Imprime o caractere empilhado.
         current = current->next;
     }
     printf("NULL\n");
 }
 
-// Cria fiuncao para comparar se a expressao esta balanceada 
+// Verifica se um caractere de abertura e um de fechamento formam um par válido e compatível.
 bool compara(char abertura, char fecha){
-
-    // Verifica se abertura corresponde com que fecha
     if (abertura == '(' && fecha == ')') return true;
     if (abertura == '{' && fecha == '}') return true;
     if (abertura == '[' && fecha == ']') return true;
-    return false;
+    return false; // Retorna false se os pares de delimitadores forem incompatíveis.
 }
 
+// Exibe a mensagem referente ao status de balanceamento da expressão e retorna flag indicativo.
 int imprime(bool balanceada){
-    // Imprime o resultado e retorna
     if (balanceada) {
         printf("\nA expressao esta balanceada.\n");
         return 1;
@@ -83,71 +85,73 @@ int imprime(bool balanceada){
         return 0;
     }
 }
-// Funcao para verificar expressao
+
+// Realiza a leitura e a verificação do balanceamento dos parênteses/chaves/colchetes da expressão.
 int verifica(Pilha* p){
 
-    // Declara as variaveis
     char exp[100];
     int i;
-    bool balancea = true;
+    bool balancea = true; // Flag inicializada assumindo que a expressão está balanceada.
 
-    // Pede para usuario digitar a expressao
+    // Solicita a expressão matemática ao usuário.
     printf("Digite a expressao:");
     scanf(" %[^\n]", exp);
 
-    // Percorre a expressão
+    // Percorre caractere por caractere a string da expressão até o fim ('\0').
     for (i = 0; exp[i] != '\0'; i++) {
         char caracter = exp[i];
 
-        // Adiciona o elemento na pilha caso seja abertura
+        // Se for caractere de abertura, empilha para conferência posterior.
         if (caracter == '(' || caracter == '{' || caracter == '['){
-            // Chama funcao para adicionar na pilha
             p = push(p, caracter);
 
-        } else if (caracter == ')' || caracter == '}' || caracter == ']'){
+        } 
+        // Se for caractere de fechamento, valida com o topo da pilha.
+        else if (caracter == ')' || caracter == '}' || caracter == ']'){
 
-            // Verifica se a pilha nao está vazia
+            // Se encontrou um fechamento mas a pilha está vazia, falta o correspondente de abertura.
             if (p->top == NULL){
                 balancea = false;
                 break;
             }
 
-            // Verifica se está a expressao está certo
+            // Confere se o fechamento atual combina com o tipo do caractere que está no topo.
             if (compara(p->top->guarda, caracter)){
-                p = pop(p);
+                p = pop(p); // Par correto: desempilha o elemento de abertura correspondente.
             } else {
-                balancea = false;
+                balancea = false; // Par incorreto (ex: '(]'): marca como desbalanceada e cancela o laço.
                 break;
             }
         }
     }
 
-    // Verifica se a expressao está vazia
+    // Ao término da string, se a pilha ainda possuir elementos, há aberturas não fechadas.
     if (p->top != NULL) {
         balancea = false;
     }
 
-    // Chama funçao para imprimir a verificao da expressao
+    // Exibe o resultado e retorna a indicação de sucesso/falha.
     int result = imprime(balancea);
 
     return result;
 }
 
+// Menu principal interativo do programa.
 void menu(){
     
-    // Declara funcao
     int opcao;
     
+    // Aloca e inicializa a pilha encadeada.
     Pilha* p = (Pilha*) malloc(sizeof(Pilha));
     p->top = NULL;
 
-    // Loop para rodar o menu
+    // Loop do menu de opções.
     do
     {
         printf("\n========================================\n");
         printf("                    MENU                  \n");
         printf("1 - Executar Verificacao.                 \n");
-        printf("2 - Sai.                                  \n");
+        printf("2 - Sair.                                 \n");
         printf("========================================  \n");
         printf("Digite a opcao: ");
         scanf("%d", &opcao);
@@ -155,11 +159,12 @@ void menu(){
         switch (opcao)
         {
         case 1:
-            // Chama funcao para verificar expressao
+            // Executa o teste de verificação da expressão.
             verifica(p);
             break;
         case 2:
             printf("\nSaindo...\n");
+            // Libera a pilha da memória antes de sair.
             free_pilha(p);
             break;  
         
@@ -170,10 +175,8 @@ void menu(){
     } while (opcao != 2);
 }
 
+// Ponto de entrada do executável C.
 int main(){
-    // Chama funçao do menu 
-    menu();
-
-    // Retorna 0
+    menu(); // Inicia o menu interativo.
     return 0;
 }

@@ -1,117 +1,143 @@
-#include <stdio.h> // Inclui a biblioteca padrão de Entrada/Saída (para funções como printf, scanf).
-#include <stdlib.h> // Inclui a biblioteca padrão (para funções como malloc, free, exit).
-#include <string.h> // Inclui a biblioteca de manipulação de strings (para strcpy).
-#include <stdbool.h> // Inclui a biblioteca para usar o tipo booleano (bool, true, false).
-#include <ctype.h> // Inclui funções para manipulação de caracteres.
+#include <stdio.h>  // Biblioteca padrão para entrada/saída de dados (printf, scanf).
+#include <stdlib.h> // Biblioteca padrão para alocação dinâmica e liberação de memória (malloc, free).
+#include <string.h> // Biblioteca para manipulação de strings (strcpy).
+#include <stdbool.h>// Suporte ao tipo de dado booleano nativo (bool, true, false).
+#include <ctype.h>  // Manipulação e validação de caracteres.
 
-// Define a estrutura para armazenar os dados de cada paciente (será o "nó" da lista).
+// Estrutura que representa cada elemento (nó) da Fila de Pacientes.
 typedef struct Pacientes{
-    char nome[50];         // Array de caracteres para guardar o nome.
-    int idade;             // Inteiro para guardar a idade.
-    int id;                // Inteiro para guardar o ID de chamada.
-    struct Pacientes* next; // Ponteiro para o PRÓXIMO nó 'Pacientes'.
-} Pacientes; // Define 'Pacientes' como um apelido para 'struct Pacientes'.
+    char nome[50];          // Armazena o nome do paciente.
+    int idade;              // Armazena a idade do paciente.
+    int id;                 // Identificador único / número da senha de atendimento do paciente.
+    struct Pacientes* next; // Ponteiro para o próximo paciente na ordem de chegada.
+} Pacientes;
 
-// Define a estrutura que gerencia a Fila como um todo.
+// Estrutura descritora da Fila (guarda as extremidades do container FIFO - First In, First Out).
 typedef struct Fila{
-    Pacientes* primeiro; // Ponteiro para o primeiro nó 'Pacientes' na fila.
-    Pacientes* ultimo;   // Ponteiro para o último nó 'Pacientes' na fila.
-} Fila; // Define 'Fila' como um apelido para 'struct Fila'.
+    Pacientes* primeiro; // Ponteiro para o paciente na frente da fila (o próximo a ser atendido).
+    Pacientes* ultimo;   // Ponteiro para o paciente no final da fila (o último que chegou).
+} Fila;
 
-// Função para criar um novo nó do tipo Pacientes.
+// Aloca dinamicamente e inicializa um novo nó do tipo Pacientes.
 Pacientes* criaNo(char newNome[50], int newIdade, int newId){
+    // Aloca a memória necessária para a struct do novo paciente na Heap.
     Pacientes* newNode = (Pacientes*) malloc (sizeof(Pacientes));
+    
+    // Copia o nome recebido por parâmetro para o campo da estrutura alocada.
     strcpy(newNode->nome, newNome);
+    
+    // Inicializa a idade e o ID do paciente.
     newNode->idade = newIdade;
     newNode->id = newId;
+    
+    // Por ser recém-criado, seu próximo ponteiro aponta para NULL (ainda não possui sucessor).
     newNode->next = NULL;
+    
+    // Retorna o ponteiro para o nó inicializado.
     return newNode;
 }
 
-// Insere no final da fila (operação Enqueue)
+// Insere um novo paciente no final da fila (Operação Enqueue em Fila FIFO).
 Fila* adiciona(Fila* f, char newNome[50], int newIdade, int newId){
+    // Cria o novo nó de paciente.
     Pacientes* newPaciente = criaNo(newNome, newIdade, newId);
 
-    if (f->ultimo == NULL){ // Verifica se a fila está vazia
+    // Caso a fila esteja completamente vazia:
+    // O novo elemento passa a ser simultaneamente o primeiro e o último paciente da fila.
+    if (f->ultimo == NULL){ 
         f->primeiro = newPaciente;
         f->ultimo = newPaciente;
     } else {
+        // Caso a fila já possua elementos:
+        // O atual último elemento aponta para o novo paciente, que passa a ser o novo último.
         f->ultimo->next = newPaciente;
         f->ultimo = newPaciente;
     }
+    // Retorna a estrutura de gerenciamento da fila atualizada.
     return f;
 }
 
-// Remove do INÍCIO da fila (operação Dequeue)
+// Remove o paciente do início da fila (Operação Dequeue em Fila FIFO - atende quem esperou mais tempo).
 Fila* remover(Fila* f){
-    if(f->primeiro == NULL) return f; // Fila vazia, não há o que remover.
+    // Se a fila estiver vazia, não há paciente para remover/atender.
+    if(f->primeiro == NULL) return f;
 
+    // Guarda temporariamente o ponteiro do paciente do início (cabeça).
     Pacientes* temp = f->primeiro;
+    
+    // O ponteiro 'primeiro' avança para o segundo paciente da fila.
     f->primeiro = f->primeiro->next;
 
-    if (f->primeiro == NULL){ // Verifica se, APÓS a remoção, a fila ficou vazia.
+    // Se após a remoção a fila ficou totalmente vazia, atualiza também o ponteiro 'ultimo' para NULL.
+    if (f->primeiro == NULL){ 
         f->ultimo = NULL;
     }
 
+    // Libera a memória do paciente atendido que foi removido da fila.
     free(temp);
+    
+    // Retorna a fila atualizada.
     return f;
 }
 
-// Verifica se a fila está vazia.
+// Verifica se a fila está totalmente sem elementos.
 int filaEstaVazia(Fila* f){
-    // --- CORREÇÃO DE BUG ---
-    // O código original usava (f->primeiro = NULL), que é uma ATRIBUIÇÃO.
-    // O correto é (f->primeiro == NULL), que é uma COMPARAÇÃO.
+    // A fila é considerada vazia se seu primeiro ponteiro for igual a NULL.
     return (f->primeiro == NULL); 
 }
 
-// Imprime os dados de todos os pacientes na fila.
+// Percorre e imprime na tela todos os pacientes atualmente aguardando na fila na ordem de atendimento.
 void imprimeLista(Fila* f){
     Pacientes* current = f->primeiro;
     printf("\n========= FILA DE PACIENTES ATUAL =========\n");
+    
+    // Avisa caso não haja nenhum paciente na fila.
     if (filaEstaVazia(f)) {
         printf("A fila esta vazia.\n");
     }
     
+    // Navega do primeiro até o último paciente exibindo suas informações.
     while(current != NULL){
         printf("Nome: %s\n", current->nome);
-        // --- CORREÇÃO DE BUG ---
-        // O código original usava %s para 'idade' e 'id', que são inteiros (int).
-        // O correto é usar %d.
         printf("Idade: %d\n", current->idade);
         printf("ID (Senha): %d\n\n", current->id);
-        current = current->next;
+        current = current->next; // Avança para o próximo paciente da fila.
     }
     printf("===========================================\n");
 }
 
-// Libera toda a memória alocada para a fila.
+// Desaloca toda a memória utilizada por todos os nós de pacientes e pela própria estrutura de fila.
 void limpaFila(Fila* f){
     Pacientes* current = f->primeiro;
+    
+    // Varre cada nó da fila liberando a memória alocada individualmente.
     while (current != NULL)
     {
         Pacientes* temp = current;
         current = current->next;
-        free(temp); // Libera cada nó
+        free(temp);
     }
-    free(f); // Libera a estrutura da Fila
+    
+    // Libera a estrutura principal que controlava a fila.
+    free(f);
 }
 
-// ================================================================
-//               NOVO MENU BASEADO NO SEU EXEMPLO
-// ================================================================
+// Interface interativa via menu para manipular a fila de atendimento do hospital.
 void menu(){
-    // 1. Inicializa a estrutura da Fila
+    // Aloca dinamicamente a estrutura de controle da Fila na memória Heap.
     Fila* minhaFila = (Fila*) malloc(sizeof(Fila));
+    
+    // Inicializa a fila vazia (ambos os ponteiros nulos).
     minhaFila->primeiro = NULL;
     minhaFila->ultimo = NULL;
 
     int opcao = 0;
-    int idCounter = 1; // Para gerar IDs/Senhas automaticamente
+    int idCounter = 1; // Contador para geração sequencial e automática das senhas/IDs.
 
+    // Loop do menu principal de opções.
     do
     {
-        // Pede para usuario escolher a opção
+        // Exibição do cabeçalho formatado do menu.
         printf("\n================================================================\n");
         printf("                         MENU - FILA DE PACIENTES                 \n");
         printf("1 - Adicionar Paciente.                                           \n");
@@ -125,7 +151,7 @@ void menu(){
 
         switch (opcao)
         {
-            case 1: // Adicionar Paciente
+            case 1: // Enqueue: cadastra e insere um paciente no final da fila.
             {
                 printf("================================================================\n");
                 printf("                     1 - Adicionar Paciente.                    \n");
@@ -133,52 +159,55 @@ void menu(){
                 char nome[50];
                 int idade;
                 
+                // Leitura do nome do paciente.
                 printf("Digite o Nome: ");
-                scanf(" %[^\n]", nome); // Espaço antes de %[^\n] para consumir o newline anterior
+                scanf(" %[^\n]", nome);
+                
+                // Leitura da idade do paciente.
                 printf("Digite a Idade: ");
                 scanf(" %d", &idade);
                 
-                // Chama a função 'adiciona' do seu código
+                // Enfileira o paciente com a senha gerada sequencialmente.
                 minhaFila = adiciona(minhaFila, nome, idade, idCounter);
                 
                 printf("\nPaciente '%s' (Senha: %d) adicionado a fila.\n", nome, idCounter);
-                idCounter++; // Incrementa o ID para o próximo
+                idCounter++; // Incrementa a senha para o próximo paciente.
                 break;
             }
 
-            case 2: // Chamar (Remover) Próximo Paciente
+            case 2: // Dequeue: chama/atende o primeiro paciente da fila.
             {
                 printf("================================================================\n");
                 printf("              2 - Chamar (Remover) Proximo Paciente.            \n");
                 printf("================================================================\n");
                 
+                // Checa se existem pacientes aguardando atendimento.
                 if (filaEstaVazia(minhaFila)) {
                     printf("\nA fila esta vazia. Nao ha pacientes para chamar.\n");
                 } else {
-                    // Pega o nome do paciente antes de remover (opcional, mas bom para feedback)
+                    // Armazena temporariamente os dados para exibir mensagem de chamada.
                     char nomeRemovido[50];
                     strcpy(nomeRemovido, minhaFila->primeiro->nome);
                     int idRemovido = minhaFila->primeiro->id;
 
-                    // Chama a função 'remove' do seu código
+                    // Remove o primeiro paciente da fila.
                     minhaFila = remover(minhaFila);
                     printf("\nChamando paciente: %s (Senha: %d)\n", nomeRemovido, idRemovido);
                 }
                 break;
             }
 
-            case 3: // Exibir Fila de Pacientes
+            case 3: // Exibe a lista ordenada de todos os pacientes na fila.
             {
                 printf("================================================================\n");
                 printf("                   3 - Exibir Fila de Pacientes.                \n");
                 printf("================================================================\n");
                 
-                // Chama a função 'imprimeLista' do seu código
                 imprimeLista(minhaFila);
                 break;
             }
 
-            case 4: // Verificar se a fila está vazia
+            case 4: // Checa o status de ocupação da fila.
             {
                 printf("================================================================\n");
                 printf("                 4 - Verificar se a fila esta vazia.            \n");
@@ -191,7 +220,7 @@ void menu(){
                 }
                 break;
             }
-            case 5: // Sair
+            case 5: // Encerra a aplicação.
                 printf("\nSaindo e limpando a memoria da fila...\n");
                 break;                
 
@@ -202,14 +231,12 @@ void menu(){
 
     } while (opcao != 5);
     
-    // 2. Limpa toda a memória alocada antes de sair
+    // Executa a limpeza da memória alocada antes do encerramento.
     limpaFila(minhaFila);
 }
 
-// ================================================================
-//                      FUNÇÃO PRINCIPAL
-// ================================================================
+// Ponto de entrada do programa C.
 int main(){
-    menu(); // Chama o menu
+    menu(); // Inicia a execução chamando a função de menu.
     return 0;
 }
