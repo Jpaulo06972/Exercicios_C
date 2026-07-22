@@ -1,0 +1,4 @@
+# Binários e arquivos compilados
+*.dSYM
+output/
+rodar_testes
