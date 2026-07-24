@@ -9,7 +9,7 @@
 // --------------------------------------------- //
 // Insere um novo elemento na primeira posição da lista encadeada.
 // Operação realizada em tempo constante O(1), pois não necessita percorrer a estrutura.
-Status insertFront(List* list, char* newName, int newCode, float newPrice) {
+Status insertFront(List* list, const char* newName, int newCode, float newPrice) {
 
     // Verifica se o ponteiro da estrutura da lista é válido para evitar falhas de segmentação
     if (list == NULL) return ERR_LIST_NULL;
@@ -38,7 +38,7 @@ Status insertFront(List* list, char* newName, int newCode, float newPrice) {
 // --------------------------------------------- //
 // Insere um novo elemento no final da lista encadeada.
 // Como não há ponteiro direto para o fim, requer navegação O(N) até o último nó.
-Status insertBack(List* list, char* newName, int newCode, float newPrice) {
+Status insertBack(List* list, const char* newName, int newCode, float newPrice) {
     
     // Confirma a existência do objeto lista recebido por parâmetro
     if (list == NULL) return ERR_LIST_NULL;

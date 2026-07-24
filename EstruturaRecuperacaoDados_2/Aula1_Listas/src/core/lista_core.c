@@ -7,7 +7,7 @@
 //             Função de Criar Nó (Book)
 // --------------------------------------------- //
 // Responsável por alocar dinamicamente a memória para um novo nó da lista e atribuir seus dados iniciais.
-Book* createNewNode(char* newName, int newCode, float newPrice){
+Book* createNewNode(const char* newName, int newCode, float newPrice){
 
     // Aloca a quantidade necessária de bytes na Heap para armazenar um registro Book
     Book* newNode = (Book*)malloc(sizeof(Book));

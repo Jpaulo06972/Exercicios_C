@@ -27,7 +27,7 @@ typedef struct List{
 // --------------------------------------------- //
 
 // Aloca e inicializa os dados de um novo nó (Book) na memória heap
-Book* createNewNode(char* newName, int newCode, float newPrice);
+Book* createNewNode(const char* newName, int newCode, float newPrice);
 
 // Aloca e inicializa a estrutura de controle da lista
 List* createList();

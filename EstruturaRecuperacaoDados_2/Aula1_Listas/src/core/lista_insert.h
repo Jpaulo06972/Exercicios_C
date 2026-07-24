@@ -11,10 +11,10 @@
 
 // Insere um novo elemento no início da lista encadeada (complexidade O(1)).
 // Retorna STATUS_OK se for bem-sucedido ou o código de erro apropriado.
-Status insertFront(List* list, char* newName, int newCode, float newPrice);
+Status insertFront(List* list, const char* newName, int newCode, float newPrice);
 
 // Insere um novo elemento no final da lista encadeada (complexidade O(N)).
 // Retorna STATUS_OK se for bem-sucedido ou o código de erro apropriado.
-Status insertBack(List* list, char* newName, int newCode, float newPrice);
+Status insertBack(List* list, const char* newName, int newCode, float newPrice);
 
 #endif // LISTA_INSERT_H
