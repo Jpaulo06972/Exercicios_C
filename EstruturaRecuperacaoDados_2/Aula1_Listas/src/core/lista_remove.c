@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdbool.h>
 #include <assert.h>
 #include "lista_core.h"
 #include "lista_remove.h"
@@ -85,8 +84,7 @@ Status removeBack(List *list)
 //   Função Remove Acima do Limite de Preço
 // --------------------------------------------- //
 // Varre a lista completa e exclui todos os nós cujo preço seja superior ao limite fornecido.
-Status removeOverPrice(List *list, float limit)
-{
+Status removeOverPrice(List *list, float limit){
 
     // Validação da lista instanciada
     if (list == NULL)
@@ -110,14 +108,8 @@ Status removeOverPrice(List *list, float limit)
             // Guarda o nó a ser removido temporariamente
             Book *aux = current;
 
-            // Subcaso 1: Era o único elemento restante da lista
-            if (list->size == 1)
-            {
-                list->head = NULL;
-                current = NULL;
-            }
-            // Subcaso 2: É o primeiro nó da lista (cabeça), mas há outros elementos depois dele
-            else if (prev == NULL)
+            // Subcaso 1: É o primeiro nó da lista (cabeça), mas há outros elementos depois dele
+            if (prev == NULL)
             {
                 list->head = current->nextNode;
                 current = list->head;
