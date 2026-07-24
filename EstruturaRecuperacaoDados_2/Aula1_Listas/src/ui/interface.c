@@ -37,13 +37,13 @@ void handleStatus(Status st) {
 // --------------------------------------------- //
 //             Valida Número Inteiro
 // --------------------------------------------- //
-// Garante a leitura correta de um número inteiro positivo do stdin.
+// Garante a leitura correta de um número inteiro positivo do stdin, exibindo mensagem personalizada.
 // Trata o estouro/erro de tipo limpando o buffer do teclado (previne loops infinitos se o usuário digitar texto).
-int validateInt(){
+int validateInt(const char *message) {
     int num = 0;
 
     do {
-        printf("Digite o numero: ");
+        printf("%s", message);
         // scanf retorna 1 quando consegue converter a entrada para inteiro com sucesso
         if (scanf("%d", &num) == 1) {
             if (num <= 0) {
@@ -64,12 +64,12 @@ int validateInt(){
 // --------------------------------------------- //
 //             Valida Número Real (Float)
 // --------------------------------------------- //
-// Garante a leitura sanitizada de um valor em ponto flutuante maior que zero.
-float validateFloat(){
+// Garante a leitura sanitizada de um valor em ponto flutuante maior que zero, exibindo mensagem personalizada.
+float validateFloat(const char *message) {
     float num = 0;
 
     do {
-        printf("Digite o numero: ");
+        printf("%s", message);
         // Verifica se a conversão para float foi bem-sucedida
         if (scanf("%f", &num) == 1) {
             if (num <= 0) {
@@ -85,6 +85,25 @@ float validateFloat(){
     } while (num <= 0);
     
     return num;
+}
+
+// --------------------------------------------- //
+//                 Valida String
+// --------------------------------------------- //
+// Garante a leitura segura e sanitizada de uma string não vazia do stdin, exibindo mensagem personalizada.
+void validateString(const char *message, char *buffer, int size) {
+    char format[20];
+    snprintf(format, sizeof(format), " %%%d[^\n]", size - 1);
+
+    do {
+        printf("%s", message);
+        if (scanf(format, buffer) == 1) {
+            break;
+        } else {
+            while (getchar() != '\n');
+            printf("\nVALOR INVALIDO - Digite um texto valido!\n");
+        }
+    } while (1);
 }
 
 // --------------------------------------------- //
@@ -143,8 +162,7 @@ void menu(List* list){
         printf("7 - Excluir Livros com Codigos Duplicados na Lista.             \n");
         printf("8 - Sair.                                                       \n");
         printf("================================================================\n");
-        printf("Digite sua opcao: ");
-        option = validateInt();
+        option = validateInt("Digite sua opcao: ");
 
         switch (option) {
             case 1: {
@@ -152,13 +170,9 @@ void menu(List* list){
                 printf("               1 - Cadastrar Livro Inicio da Lista              \n");
                 printf("================================================================\n");
                 
-                printf("Digite o nome do livro: ");
-                // ' %49[^\n]' ignora espaços iniciais em branco, lê até a quebra de linha e limita a 49 caracteres para proteger a memória
-                scanf(" %49[^\n]", tempName);
-                printf("A seguir digite o codigo: ");
-                tempCode = validateInt();
-                printf("A seguir digite o preco: ");
-                tempPrice = validateFloat();
+                validateString("Digite o nome do livro: ", tempName, sizeof(tempName));
+                tempCode = validateInt("A seguir digite o codigo: ");
+                tempPrice = validateFloat("A seguir digite o preco: ");
 
                 // Executa a inserção no início e direciona o código de retorno para formatação de UI
                 opStatus = insertFront(list, tempName, tempCode, tempPrice);
@@ -171,12 +185,9 @@ void menu(List* list){
                 printf("               2 - Cadastrar Livro Fim da Lista                 \n");
                 printf("================================================================\n");
                 
-                printf("Digite o nome do livro: ");
-                scanf(" %49[^\n]", tempName);
-                printf("A seguir digite o codigo: ");
-                tempCode = validateInt();
-                printf("A seguir digite o preco: ");
-                tempPrice = validateFloat();
+                validateString("Digite o nome do livro: ", tempName, sizeof(tempName));
+                tempCode = validateInt("A seguir digite o codigo: ");
+                tempPrice = validateFloat("A seguir digite o preco: ");
 
                 // Executa a inserção no fim e repassa o retorno de status para a UI
                 opStatus = insertBack(list, tempName, tempCode, tempPrice);
@@ -212,11 +223,10 @@ void menu(List* list){
                 printf("================================================================\n");
 
                 // Solicita o valor limite dos livros na lista
-                printf("Digite o preco limite: ");
-                tempPrice = validateFloat();
+                tempPrice = validateFloat("Digite o preco limite: ");
                 opStatus = removeOverPrice(list, tempPrice);
                 handleStatus(opStatus);
-                     
+                break;
             }
 
             case 6: {

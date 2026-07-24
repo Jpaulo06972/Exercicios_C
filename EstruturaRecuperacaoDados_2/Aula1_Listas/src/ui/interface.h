@@ -12,11 +12,14 @@
 // Converte os códigos de enum Status do Core em mensagens explicativas no console para o usuário
 void handleStatus(Status st);
 
-// Captura e valida a entrada de números inteiros positivos via terminal, sanitizando o buffer
-int validateInt();
+// Captura e valida a entrada de números inteiros positivos via terminal, exibindo mensagem personalizada
+int validateInt(const char *message);
 
-// Captura e valida a entrada de números de ponto flutuante positivos via terminal
-float validateFloat();
+// Captura e valida a entrada de números de ponto flutuante positivos via terminal, exibindo mensagem personalizada
+float validateFloat(const char *message);
+
+// Captura e valida a entrada de texto/string via terminal, exibindo mensagem personalizada
+void validateString(const char *message, char *buffer, int size);
 
 // Faz a leitura da lista e verifica qual livro possui maior preço 
 Book* findBiggerPrice(List* list);
