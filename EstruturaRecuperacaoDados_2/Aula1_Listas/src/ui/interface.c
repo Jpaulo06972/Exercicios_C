@@ -11,7 +11,7 @@
 // --------------------------------------------- //
 // Traduz os códigos de status de erro/sucesso retornados pela camada lógica (Core)
 // em mensagens amigáveis exibidas no terminal para o usuário final.
-void trataStatus(Status st) {
+void handleStatus(Status st) {
     switch (st) {
         case STATUS_OK:
             printf("\n[SUCESSO] Operacao realizada com sucesso!\n\n");
@@ -39,7 +39,7 @@ void trataStatus(Status st) {
 // --------------------------------------------- //
 // Garante a leitura correta de um número inteiro positivo do stdin.
 // Trata o estouro/erro de tipo limpando o buffer do teclado (previne loops infinitos se o usuário digitar texto).
-int validaInt(){
+int validateInt(){
     int num = 0;
 
     do {
@@ -65,7 +65,7 @@ int validaInt(){
 //             Valida Número Real (Float)
 // --------------------------------------------- //
 // Garante a leitura sanitizada de um valor em ponto flutuante maior que zero.
-float validaFloat(){
+float validateFloat(){
     float num = 0;
 
     do {
@@ -88,17 +88,47 @@ float validaFloat(){
 }
 
 // --------------------------------------------- //
+//         Achar o Livro com Maior Preço
+// --------------------------------------------- //
+Book* findBiggerPrice(List* list){
+    
+    // Validação da lista instanciada
+    if (list == NULL) return NULL;
+
+    // Retorna erro caso a lista esteja totalmente vazia
+    if (list->head == NULL) return NULL;
+
+    // Ponteiro de varredura atual
+    Book* current = list->head;
+
+    // Cria o ponteiro do livro com maior preço
+    Book* biggerPrice = current;
+
+    while (current != NULL){
+
+        if (biggerPrice->price < current->price){
+            biggerPrice = current;
+        }
+
+        current = current->nextNode;
+    }
+
+    return biggerPrice;
+}
+
+// --------------------------------------------- //
 //            Menu Principal Interativo
 // --------------------------------------------- //
 // Renderiza o menu de opções no console e faz a integração entre as entradas do usuário e as operações do Core.
-void menu(List* lista){
-    int opcao = 0;
+void menu(List* list){
+    int option = 0;
 
     // Buffer e variáveis temporárias para armazenar os dados digitados antes de criar o objeto Book
     char tempName[50];
-    int tempCodigo;
-    float tempPreco;
-    Status statusOp; // Armazena a resposta de erro/sucesso retornada pela camada lógica
+    int tempCode;
+    float tempPrice;
+    Book* tempBook = NULL;
+    Status opStatus; // Armazena a resposta de erro/sucesso retornada pela camada lógica
 
     do {
         // Exibição do cabeçalho visual do menu
@@ -108,13 +138,15 @@ void menu(List* lista){
         printf("2 - Cadastrar Livro no Fim da Lista.                            \n");
         printf("3 - Excluir Livro do Inicio da Lista.                           \n");
         printf("4 - Excluir Livro do Fim da Lista.                              \n");
-        printf("5 - Consultar Lista.                                            \n");
-        printf("6 - Sair.                                                       \n");
+        printf("5 - Excluir Livros Acima do Preço na Lista.                     \n");
+        printf("6 - Exibir Livro com Maior Preço da Lista.                      \n");
+        printf("7 - Excluir Livros com Codigos Duplicados na Lista.             \n");
+        printf("8 - Sair.                                                       \n");
         printf("================================================================\n");
         printf("Digite sua opcao: ");
-        opcao = validaInt();
+        option = validateInt();
 
-        switch (opcao) {
+        switch (option) {
             case 1: {
                 printf("================================================================\n");
                 printf("               1 - Cadastrar Livro Inicio da Lista              \n");
@@ -124,13 +156,13 @@ void menu(List* lista){
                 // ' %49[^\n]' ignora espaços iniciais em branco, lê até a quebra de linha e limita a 49 caracteres para proteger a memória
                 scanf(" %49[^\n]", tempName);
                 printf("A seguir digite o codigo: ");
-                tempCodigo = validaInt();
+                tempCode = validateInt();
                 printf("A seguir digite o preco: ");
-                tempPreco = validaFloat();
+                tempPrice = validateFloat();
 
                 // Executa a inserção no início e direciona o código de retorno para formatação de UI
-                statusOp = insertFront(lista, tempName, tempCodigo, tempPreco);
-                trataStatus(statusOp);
+                opStatus = insertFront(list, tempName, tempCode, tempPrice);
+                handleStatus(opStatus);
                 break;
             }
 
@@ -142,13 +174,13 @@ void menu(List* lista){
                 printf("Digite o nome do livro: ");
                 scanf(" %49[^\n]", tempName);
                 printf("A seguir digite o codigo: ");
-                tempCodigo = validaInt();
+                tempCode = validateInt();
                 printf("A seguir digite o preco: ");
-                tempPreco = validaFloat();
+                tempPrice = validateFloat();
 
                 // Executa a inserção no fim e repassa o retorno de status para a UI
-                statusOp = insertBack(lista, tempName, tempCodigo, tempPreco);
-                trataStatus(statusOp);
+                opStatus = insertBack(list, tempName, tempCode, tempPrice);
+                handleStatus(opStatus);
                 break;
             }
 
@@ -158,8 +190,8 @@ void menu(List* lista){
                 printf("================================================================\n");
                 
                 // Solicita a remoção da cabeça da lista e exibe o feedback correspondente
-                statusOp = removeFront(lista); 
-                trataStatus(statusOp);
+                opStatus = removeFront(list); 
+                handleStatus(opStatus);
                 break;
             }
 
@@ -169,21 +201,56 @@ void menu(List* lista){
                 printf("================================================================\n");
                 
                 // Solicita a remoção da cauda da lista e exibe o feedback correspondente
-                statusOp = removeBack(lista);
-                trataStatus(statusOp);
+                opStatus = removeBack(list);
+                handleStatus(opStatus);
                 break;
             }
             
             case 5: {
                 printf("================================================================\n");
-                printf("                       5 - Consultar Lista                      \n");
+                printf("          5 - Excluir Livros Acima do Preço na Lista            \n");
                 printf("================================================================\n");
-                
-                // Ponto de extensão para a implementação futura da listagem dos elementos
-                break;        
+
+                // Solicita o valor limite dos livros na lista
+                printf("Digite o preco limite: ");
+                tempPrice = validateFloat();
+                opStatus = removeOverPrice(list, tempPrice);
+                handleStatus(opStatus);
+                     
             }
 
             case 6: {
+                printf("================================================================\n");
+                printf("          6 - Exibir Livro com Maior Preço da Lista             \n");
+                printf("================================================================\n");
+                
+                // Chama função para verificar qual e o livro com maior preço na lista
+                tempBook = findBiggerPrice(list);
+
+                // Verifica se a lista não estava vazia antes de tentar imprimir
+                if (tempBook != NULL) {
+                    printf("\n--- Livro com Maior Preco ---\n");
+                    printf("Titulo: %s\n", tempBook->name);
+                    printf("Codigo: %d\n", tempBook->code);
+                    printf("Preco: R$ %.2f\n", tempBook->price);
+                } else {
+                    printf("A lista de livros esta vazia.\n");
+                }
+                break;
+            }
+
+            case 7: {
+                printf("================================================================\n");
+                printf("      7 - Excluir Livros com Codigos Duplicados na Lista.       \n");
+                printf("================================================================\n");
+                
+                // Solicita a remoção de livros com códigos duplicados e exibe o feedback correspondente
+                opStatus = removeDuplicateCode(list); 
+                handleStatus(opStatus);
+                break;
+            }
+
+            case 8: {
                 printf("\nSaindo do programa...\n\n");
                 break;
             }
@@ -194,5 +261,5 @@ void menu(List* lista){
             }
         }
 
-    } while (opcao != 6); // Mantém a execução até o usuário solicitar a opção de saída (6)
+    } while (option != 8); // Mantém a execução até o usuário solicitar a opção de saída (6)
 }

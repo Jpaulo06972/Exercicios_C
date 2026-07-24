@@ -10,15 +10,18 @@
 // --------------------------------------------- //
 
 // Remove o primeiro elemento da lista e desaloca sua memória em tempo O(1)
-Status removeFront(List* lista);
+Status removeFront(List* list);
 
 // Remove o último elemento da lista encadeada e desaloca sua memória em tempo O(N)
-Status removeBack(List* lista);
+Status removeBack(List* list);
 
 // Filtra a lista removendo todos os elementos que possuem preço estritamente superior ao valor limite
-Status removeOverPrice(List* lista, float limite);
+Status removeOverPrice(List* list, float limit);
+
+// Filtra a lista removendo todos os livros com código de identificação duplicado
+Status removeDuplicateCode(List* list);
 
 // Percorre toda a estrutura liberando a memória de cada nó e, por fim, a memória da lista descritora
-Status liberarLista(List* lista);
+Status freeList(List* list);
 
 #endif // LISTA_REMOVE_H

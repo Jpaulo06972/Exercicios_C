@@ -15,7 +15,7 @@ void imprimePessoa(const Pessoa *p){
     // Acessa o membro 'nome' através da desreferenciação do ponteiro 'p' usando o operador de seta (->).
     printf("Nome: %s\n", p->nome);
     // Acessa o membro 'idade' através do ponteiro 'p' e formata como valor inteiro na saída.
-    printf("Idade: %d\n", p.idade);
+    printf("Idade: %d\n", p->idade);
 }
 
 int main(){

@@ -10,15 +10,18 @@
 // --------------------------------------------- //
 
 // Converte os códigos de enum Status do Core em mensagens explicativas no console para o usuário
-void trataStatus(Status st);
+void handleStatus(Status st);
 
 // Captura e valida a entrada de números inteiros positivos via terminal, sanitizando o buffer
-int validaInt();
+int validateInt();
 
 // Captura e valida a entrada de números de ponto flutuante positivos via terminal
-float validaFloat();
+float validateFloat();
+
+// Faz a leitura da lista e verifica qual livro possui maior preço 
+Book* findBiggerPrice(List* list);
 
 // Exibe o menu principal interativo e processa os comandos e operações do usuário
-void menu(List* lista);
+void menu(List* list);
 
 #endif // INTERFACE_H

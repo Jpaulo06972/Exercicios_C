@@ -7,7 +7,7 @@
 int main(){
 
     // Inicializa dinamicamente a estrutura de controle da lista de livros (camada Core)
-    List* myList = criarLista();
+    List* myList = createList();
 
     // Valida se a alocação de memória para o descritor da lista obteve sucesso
     if (myList != NULL){
@@ -15,7 +15,7 @@ int main(){
         menu(myList);
         
         // Ao encerrar o menu, garante a desalocação de todos os nós e do descritor (evita vazamentos de memória/memory leaks)
-        liberarLista(myList);
+        freeList(myList);
     } else {
         // Exibe mensagem de erro no console caso ocorra falha crítica de memória na inicialização
         printf("Erro ao iniciar a lista.\n");
