@@ -271,5 +271,5 @@ void menu(List* list){
             }
         }
 
-    } while (option != 8); // Mantém a execução até o usuário solicitar a opção de saída (6)
+    } while (option != 8); // Mantém a execução até o usuário solicitar a opção de saída (8)
 }

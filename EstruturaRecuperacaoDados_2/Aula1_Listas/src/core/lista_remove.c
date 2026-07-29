@@ -8,16 +8,13 @@
 //      Função Remove no Início da Lista
 // --------------------------------------------- //
 // Desaloca o primeiro nó da lista encadeada e reajusta o ponteiro descritor de início.
-Status removeFront(List *list)
-{
+Status removeFront(List* list){
 
     // Proteção contra ponteiros nulos informados como parâmetro da função
-    if (list == NULL)
-        return ERR_LIST_NULL;
+    if (list == NULL) return ERR_LIST_NULL;
 
     // Impede a operação se a lista já estiver vazia para evitar violação de acesso à memória
-    if (list->head == NULL)
-        return ERR_EMPTY_LIST;
+    if (list->head == NULL) return ERR_EMPTY_LIST;
 
     // Salva a referência do nó atual da cabeça antes de desconectá-lo
     Book *toDelete = list->head;
@@ -38,16 +35,13 @@ Status removeFront(List *list)
 //       Função Remove no Fim da Lista
 // --------------------------------------------- //
 // Localiza o último nó, desfaz o encadeamento a partir do penúltimo e desaloca a memória do elemento final.
-Status removeBack(List *list)
-{
+Status removeBack(List* list){
 
     // Garante que o descritor da lista é um ponteiro válido
-    if (list == NULL)
-        return ERR_LIST_NULL;
+    if (list == NULL) return ERR_LIST_NULL;
 
     // Interrompe se a lista não possuir elementos para exclusão
-    if (list->head == NULL)
-        return ERR_EMPTY_LIST;
+    if (list->head == NULL) return ERR_EMPTY_LIST;
 
     // Caso de borda: Se a lista possui exatamente 1 nó, a remoção zera o ponteiro de início
     if (list->head->nextNode == NULL)
@@ -84,15 +78,13 @@ Status removeBack(List *list)
 //   Função Remove Acima do Limite de Preço
 // --------------------------------------------- //
 // Varre a lista completa e exclui todos os nós cujo preço seja superior ao limite fornecido.
-Status removeOverPrice(List *list, float limit){
+Status removeOverPrice(List* list, float limit){
 
     // Validação da lista instanciada
-    if (list == NULL)
-        return ERR_LIST_NULL;
+    if (list == NULL) return ERR_LIST_NULL;
 
     // Retorna erro caso a lista esteja totalmente vazia
-    if (list->head == NULL)
-        return ERR_EMPTY_LIST;
+    if (list->head == NULL) return ERR_EMPTY_LIST;
 
     // Ponteiro de varredura atual
     Book *current = list->head;
@@ -144,8 +136,7 @@ Status freeList(List *list)
 {
 
     // Valida se o ponteiro informado é válido
-    if (list == NULL)
-        return ERR_LIST_NULL;
+    if (list == NULL) return ERR_LIST_NULL;
 
     // Se já estiver limpa, apenas desaloca a estrutura descritora
     if (list->head == NULL)

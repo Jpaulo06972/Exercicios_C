@@ -2,3 +2,5 @@
 *.dSYM
 output/
 rodar_testes
+queue_app
+test_runner
