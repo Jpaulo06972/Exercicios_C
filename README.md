@@ -1,42 +1,114 @@
-# 💻 EXERCÍCIOS_C - Coleção de Projetos do Semestre
+# 💻 EXERCÍCIOS_C - Coleção de Projetos e Estruturas de Dados em C
 
-- Este repositório serve como um portfólio de estudos e projetos desenvolvidos em Linguagem C ao longo do semestre. Os exercícios estão organizados por tópico, cobrindo desde conceitos básicos de algoritmos até estruturas de dados mais complexas.
+Portfólio completo da disciplina de **Algoritmos e Estruturas de Dados / Recuperação de Dados** (3º Semestre Faculdade).
+O repositório está organizado em 3 grandes pilares acadêmicos, abrangendo desde os fundamentos da linguagem C até estruturas de dados dinâmicas avançadas e árvores binárias de busca.
+
+---
 
 ## 🚀 Estrutura do Repositório
-- O conteúdo está categorizado em duas principais áreas de estudo, além de projetos finais mais elaborados.
 
-### 1. Algoritmos Fundamentais (Algoritmos/): Esta seção abrange os fundamentos da programação e da Linguagem C.
-- Aula2_Liguaguem_C: Primeiros passos e sintaxe básica da Linguagem C.
-- Aula3_Condicionais: Implementação de estruturas de decisão (if, else, switch).
-- Aula4_Loops: Uso de estruturas de repetição (for, while, do-while).
-- Aula5_Vetores: Manipulação de vetores (arrays) unidimensionais.
-- Aula6_Matrizes: Trabalhando com matrizes e arrays bidimensionais.
-- Aula7_Strings: Manipulação de cadeias de caracteres.
-- Aula8_Ponteiros: Fundamentos e uso de ponteiros e endereços de memória.
-- Aula9_Funcoes: Modularização de código utilizando funções.
-- Aula10_Structs: Definição e uso de estruturas de dados (structs).
+```text
+Exercicios_C/
+├── Algoritmos/                   # Módulo 1: Fundamentos da Linguagem C (Vetores, Matrizes, Ponteiros, Structs)
+├── EstruturaRecuperacaoDados_1/   # Módulo 2: Estruturas de Dados Iniciais e Projetos Práticos (Pilha, Fila, Lista, Calculadora, Undo/Redo)
+└── EstruturaRecuperacaoDados_2/   # Módulo 3: Estruturas Avançadas Modularizadas (Core/UI), Suítes de Testes Unitários e Árvores (ABB)
+```
 
+---
 
-### 2. Estruturas de Dados e Recuperação (EstruturaRecuperaçãoDados/): Foco em conceitos avançados de estruturas de dados.
-- Aula1_Recursividade: Exemplos e aplicações de funções recursivas.
-- Aula2_ListasEncadeadas: Implementação e manipulação de Listas Encadeadas.
-- Aula3_Filas: Implementação da estrutura de dados Fila (FIFO).
-- Aula4_Pilhas: Implementação da estrutura de dados Pilha (LIFO).
+## ⚡ Guia Rápido: Copiar e Colar (Compilar e Rodar)
 
-### 3. Estruturas de Dados e Recuperação (EstruturaRecuperaçãoDados/): Projetos Adicionais.
-- Calculadora: Um projeto mais robusto que implementa uma calculadora simples ou avançada.
-- ParentesesBalanceados: Implementação de lógica para verificar o balanceamento de parênteses em uma expressão.
-- UndoRedo: Um projeto que simula funcionalidades de "desfazer" e "refazer", utilizando conceitos de Pilhas ou Listas.
+### 1. 📘 Módulo 1: Algoritmos Fundamentais (`Algoritmos/`)
 
-## 🛠 Como Executar
-- Para executar qualquer um dos arquivos .c deste repositório, você precisará de um compilador C (como GCC) instalado.
+- **Exemplo - Laços de Repetição (Aula 4)**:
+```bash
+cd Algoritmos/Aula4_Loops && gcc -Wall -Wextra Ex_1.c -o ex1 && ./ex1
+```
+- **Exemplo - Ponteiros (Aula 8)**:
+```bash
+cd Algoritmos/Aula8_Ponteiros && gcc -Wall -Wextra Ex_1.c -o ex1 && ./ex1
+```
+- **Exemplo - Structs (Aula 10)**:
+```bash
+cd Algoritmos/Aula10_Structs && gcc -Wall -Wextra Ex_1.c -o ex1 && ./ex1
+```
 
-### 1.Navegue até o diretório do exercício desejado:
-- cd Algoritmos/Aula4_Loops
-### 2.Compile o código:
-- gcc nome_do_arquivo.c -o programa
-### 3.Execute o programa:
-- ./programa
+---
 
-**EXERCÍCIOS_C** - Coleção de Projetos do Semestre 💻
+### 2. 📗 Módulo 2: Estrutura e Recuperação de Dados I (`EstruturaRecuperacaoDados_1/`)
 
+- **Recursividade (Aula 1)**:
+```bash
+cd EstruturaRecuperacaoDados_1/Aula1_Recursividade && gcc -Wall -Wextra Ex_1.c -o ex1 && ./ex1
+```
+- **Listas Encadeadas (Aula 2)**:
+```bash
+cd EstruturaRecuperacaoDados_1/Aula2_ListasEncadeadas && gcc -Wall -Wextra Ex.c -o ex && ./ex
+```
+- **Projeto Calculadora de Expressões**:
+```bash
+cd EstruturaRecuperacaoDados_1/Calculadora && gcc -Wall -Wextra Ex.c -o calc && ./calc
+```
+- **Projeto Parênteses Balanceados**:
+```bash
+cd EstruturaRecuperacaoDados_1/ParentesesBalanceados && gcc -Wall -Wextra Ex.c -o par && ./par
+```
+
+---
+
+### 3. 📕 Módulo 3: Estrutura e Recuperação de Dados II (`EstruturaRecuperacaoDados_2/`)
+
+#### 📚 Aula 1 - Lista Simplesmente Encadeada
+- **Testes Unitários**:
+```bash
+cd EstruturaRecuperacaoDados_2/Aula1_Listas && gcc -Wall -Wextra src/core/lista_core.c src/core/lista_insert.c src/core/lista_remove.c src/ui/interface.c testes/teste_lista.c -I src/core -I src/ui -o test_runner && ./test_runner
+```
+- **Aplicação Interativa (Menu)**:
+```bash
+cd EstruturaRecuperacaoDados_2/Aula1_Listas && gcc -Wall -Wextra src/main.c src/core/lista_core.c src/core/lista_insert.c src/core/lista_remove.c src/ui/interface.c -I src/core -I src/ui -o app && ./app
+```
+
+#### 🥞 Aula 2 - Pilha Encadeada (LIFO)
+- **Testes Unitários**:
+```bash
+cd EstruturaRecuperacaoDados_2/Aula2_Pilha && gcc -Wall -Wextra src/core/pilha_core.c testes/tests_Pilha.c -I src/core -o test_runner && ./test_runner
+```
+- **Aplicação Interativa (Menu)**:
+```bash
+cd EstruturaRecuperacaoDados_2/Aula2_Pilha && gcc -Wall -Wextra src/main.c src/core/pilha_core.c src/ui/interface.c -I src/core -I src/ui -o app && ./app
+```
+
+#### 🚶‍♂️🚶‍♀️ Aula 3 - Fila Encadeada (FIFO)
+- **Testes Unitários**:
+```bash
+cd EstruturaRecuperacaoDados_2/Aula3_Fila && gcc -Wall -Wextra src/core/fila_core.c testes/tests_Fila.c -I src/core -o test_runner && ./test_runner
+```
+- **Aplicação Interativa (Menu)**:
+```bash
+cd EstruturaRecuperacaoDados_2/Aula3_Fila && gcc -Wall -Wextra src/main.c src/core/fila_core.c src/ui/interface.c -I src/core -I src/ui -o app && ./app
+```
+
+#### 🌲 Aula 4 - Árvore Binária de Busca (ABB)
+- **Testes Unitários**:
+```bash
+cd EstruturaRecuperacaoDados_2/Aula4_ABB && gcc -Wall -Wextra src/core/arvore_core.c src/ui/interface.c testes/tests_Arvore.c -I src/core -I src/ui -o test_runner && ./test_runner
+```
+- **Aplicação Interativa (Menu)**:
+```bash
+cd EstruturaRecuperacaoDados_2/Aula4_ABB && gcc -Wall -Wextra src/main.c src/core/arvore_core.c src/ui/interface.c -I src/core -I src/ui -o app && ./app
+```
+
+---
+
+## 🧪 Rodar TODOS os Testes do Módulo 3 de Uma Vez Só
+```bash
+(cd EstruturaRecuperacaoDados_2/Aula1_Listas && gcc -Wall -Wextra src/core/lista_core.c src/core/lista_insert.c src/core/lista_remove.c src/ui/interface.c testes/teste_lista.c -I src/core -I src/ui -o test_runner && ./test_runner) && (cd EstruturaRecuperacaoDados_2/Aula2_Pilha && gcc -Wall -Wextra src/core/pilha_core.c testes/tests_Pilha.c -I src/core -o test_runner && ./test_runner) && (cd EstruturaRecuperacaoDados_2/Aula3_Fila && gcc -Wall -Wextra src/core/fila_core.c testes/tests_Fila.c -I src/core -o test_runner && ./test_runner) && (cd EstruturaRecuperacaoDados_2/Aula4_ABB && gcc -Wall -Wextra src/core/arvore_core.c src/ui/interface.c testes/tests_Arvore.c -I src/core -I src/ui -o test_runner && ./test_runner)
+```
+
+---
+
+## ⚙️ Compilação Genérica
+Para qualquer arquivo `.c` individual do repositório:
+```bash
+gcc -Wall -Wextra nome_do_arquivo.c -o programa && ./programa
+```
