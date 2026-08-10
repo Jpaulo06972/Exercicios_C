@@ -7,6 +7,7 @@
 
 // Importa a interface do Core da Fila para executar os testes unitários
 #include "../src/core/fila_core.h"
+#include "../src/core/error.h"
 
 // -------------------------------------------------------------
 // Teste 1: Validação de Inicialização da Fila
@@ -110,18 +111,60 @@ void test_dequeue() {
 }
 
 // -------------------------------------------------------------
+// Teste 4 (Erro): Validação de Operações com Ponteiro Nulo (ERR_QUEUE_NULL)
+// -------------------------------------------------------------
+// Testa a robustez ao tentar operar com uma fila nula (NULL).
+void test_queueErrors_NullPointer(){
+
+    // Testa enqueue em ponteiro NULL
+    assert(enqueue(NULL, 10) == ERR_QUEUE_NULL);
+
+    // Testa dequeue em ponteiro NULL
+    assert(dequeue(NULL) == ERR_QUEUE_NULL);
+
+    // Testa destroyQueue em ponteiro NULL
+    assert(destroyQueue(NULL) == ERR_QUEUE_NULL);
+
+    printf("[PASSOU] - Teste de Erro: Ponteiro Nulo na Fila\n");
+}
+
+// -------------------------------------------------------------
+// Teste 5 (Erro): Validação de Operação em Fila Vazia (ERR_QUEUE_EMPTY)
+// -------------------------------------------------------------
+// Testa a tentativa de desenfileiramento (dequeue) em uma fila vazia.
+void test_queueErrors_EmptyQueue(){
+
+    Queue* queue = createQueue();
+
+    // Tenta fazer dequeue em uma fila vazia
+    assert(dequeue(queue) == ERR_QUEUE_EMPTY);
+
+    // Adiciona e remove um elemento para desocupar a fila
+    enqueue(queue, 100);
+    assert(dequeue(queue) == STATUS_SUCCESS);
+
+    // Tenta fazer dequeue novamente na fila desocupada
+    assert(dequeue(queue) == ERR_QUEUE_EMPTY);
+
+    destroyQueue(queue);
+    printf("[PASSOU] - Teste de Erro: Fila Vazia (Underflow)\n");
+}
+
+// -------------------------------------------------------------
 // Executor da Suíte de Testes Unitários
 // -------------------------------------------------------------
 int main() {
     // Cabeçalho da execução da suíte de testes
-    printf("\n=== RODANDO SUÍTE DE TESTES UNITÁRIOS ===\n\n");
+    printf("\n=== RODANDO SUÍTE DE TESTES UNITÁRIOS DA FILA ===\n\n");
     
-    // Executa o caso de teste 1
+    // Executa os testes de uso normal
     test_createQueue();
-    // Executa o caso de teste 2
     test_enqueue();
-    // Executa o caso de teste 3
     test_dequeue();
+
+    // Executa os testes de cenários de erro / exceção
+    test_queueErrors_NullPointer();
+    test_queueErrors_EmptyQueue();
 
     // Imprime a mensagem de sucesso total da suíte de testes
     printf("\n>>> TODOS OS TESTES PASSARAM COM SUCESSO! <<<\n\n");

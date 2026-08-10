@@ -7,6 +7,7 @@
 #include "../src/core/lista_insert.h"
 #include "../src/core/lista_remove.h"
 #include "../src/ui/interface.h"
+#include "../src/core/error.h"
 
 // -------------------------------------------------------------
 // Teste 1: Validação de Inicialização da Lista
@@ -185,6 +186,7 @@ void test_findBiggerPrice(){
     // Faz a leitura da lista e retorna o livro com maior preço
     temp = findBiggerPrice(list);
 
+    assert(temp != NULL);
     assert(strcmp(temp->name, "Livro D") == 0); 
     assert(temp->code == 104); 
     assert(temp->price == 50.0);    
@@ -192,10 +194,11 @@ void test_findBiggerPrice(){
     // Aplica o filtro eliminando nós com valor superior a R$ 35.0
     removeOverPrice(list, 35.0);
 
-    // Faz a leitura novamenteß da lista e retorna o livro com maior preço
+    // Faz a leitura novamente da lista e retorna o livro com maior preço
     temp = findBiggerPrice(list);
 
     // Validações: devem restar 4 livros (25.0, 10.0, 20.0, 15.0)
+    assert(temp != NULL);
     assert(strcmp(temp->name, "Livro A") == 0); 
     assert(temp->code == 101); 
     assert(temp->price == 25.0); 
@@ -226,7 +229,7 @@ void test_removeDuplicateCode(){
     assert(list->size == 3); 
     assert(list->head->code == 101); // Primeiro item restante
     assert(list->head->nextNode->code == 102); // Segundo item restante
-    assert(list->head->nextNode->nextNode->code == 103); // Segundo item restante
+    assert(list->head->nextNode->nextNode->code == 103); // Terceiro item restante
 
     freeList(list);
     printf("[PASSOU] - Teste Remove Duplicate Code\n");
@@ -234,12 +237,48 @@ void test_removeDuplicateCode(){
 }
 
 // -------------------------------------------------------------
+// Teste 9 (Erro): Validação de Operações com Ponteiro Nulo (ERR_LIST_NULL / NULL)
+// -------------------------------------------------------------
+// Testa a resposta do sistema ao receber ponteiros de lista nulos (NULL).
+void test_listErrors_NullPointer(){
+
+    assert(insertFront(NULL, "Livro X", 999, 10.0) == ERR_LIST_NULL);
+    assert(insertBack(NULL, "Livro X", 999, 10.0) == ERR_LIST_NULL);
+    assert(removeFront(NULL) == ERR_LIST_NULL);
+    assert(removeBack(NULL) == ERR_LIST_NULL);
+    assert(removeOverPrice(NULL, 50.0) == ERR_LIST_NULL);
+    assert(removeDuplicateCode(NULL) == ERR_LIST_NULL);
+    assert(findBiggerPrice(NULL) == NULL);
+    assert(freeList(NULL) == ERR_LIST_NULL);
+
+    printf("[PASSOU] - Teste de Erro: Ponteiro Nulo na Lista\n");
+}
+
+// -------------------------------------------------------------
+// Teste 10 (Erro): Validação de Operações em Lista Vazia (ERR_EMPTY_LIST / NULL)
+// -------------------------------------------------------------
+// Testa a resposta de funções de remoção e consulta em listas totalmente vazias.
+void test_listErrors_EmptyList(){
+
+    List* list = createList();
+
+    assert(removeFront(list) == ERR_EMPTY_LIST);
+    assert(removeBack(list) == ERR_EMPTY_LIST);
+    assert(removeOverPrice(list, 50.0) == ERR_EMPTY_LIST);
+    assert(removeDuplicateCode(list) == ERR_EMPTY_LIST);
+    assert(findBiggerPrice(list) == NULL);
+
+    freeList(list);
+    printf("[PASSOU] - Teste de Erro: Lista Vazia (Underflow)\n");
+}
+
+// -------------------------------------------------------------
 // Executor Principal da Suíte de Testes
 // -------------------------------------------------------------
 int main(){
-    printf("\n=== RODANDO SUÍTE DE TESTES UNITÁRIOS ===\n\n");
+    printf("\n=== RODANDO SUÍTE DE TESTES UNITÁRIOS DA LISTA ===\n\n");
 
-    // Executa individualmente cada caso de teste
+    // Executa os testes de uso normal
     test_createList();
     test_insertFront();
     test_insertBack();
@@ -248,6 +287,10 @@ int main(){
     test_removeOverPrice();
     test_findBiggerPrice();
     test_removeDuplicateCode();
+
+    // Executa os testes de cenários de erro / exceção
+    test_listErrors_NullPointer();
+    test_listErrors_EmptyList();
 
     printf("\n>>> TODOS OS TESTES PASSARAM COM SUCESSO! <<<\n\n");
     return 0; // Sucesso da suíte

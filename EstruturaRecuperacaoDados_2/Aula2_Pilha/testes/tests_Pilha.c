@@ -7,6 +7,7 @@
 
 // Importa a interface do Core da Pilha para executar os testes unitários
 #include "../src/core/pilha_core.h"
+#include "../src/core/error.h"
 
 // -------------------------------------------------------------
 // Teste 1: Validação de Inicialização da Pilha
@@ -114,18 +115,60 @@ void test_pop(){
 }
 
 // -------------------------------------------------------------
+// Teste 4 (Erro): Validação de Operações com Ponteiro Nulo (ERR_STACK_NULL)
+// -------------------------------------------------------------
+// Testa a robustez ao tentar operar com uma pilha nula (NULL).
+void test_stackErrors_NullPointer(){
+
+    // Testa push em ponteiro NULL
+    assert(push(NULL, 10) == ERR_STACK_NULL);
+
+    // Testa pop em ponteiro NULL
+    assert(pop(NULL) == ERR_STACK_NULL);
+
+    // Testa destroyStack em ponteiro NULL
+    assert(destroyStack(NULL) == ERR_STACK_NULL);
+
+    printf("[PASSOU] - Teste de Erro: Ponteiro Nulo na Pilha\n");
+}
+
+// -------------------------------------------------------------
+// Teste 5 (Erro): Validação de Operação em Pilha Vazia (ERR_STACK_EMPTY)
+// -------------------------------------------------------------
+// Testa a tentativa de remoção (pop) em uma pilha vazia.
+void test_stackErrors_EmptyStack(){
+
+    Stack* stack = createStack();
+
+    // Tenta fazer pop em uma pilha vazia
+    assert(pop(stack) == ERR_STACK_EMPTY);
+
+    // Adiciona e remove um elemento para desocupar a pilha
+    push(stack, 100);
+    assert(pop(stack) == STATUS_SUCCESS);
+
+    // Tenta fazer pop novamente na pilha desocupada
+    assert(pop(stack) == ERR_STACK_EMPTY);
+
+    destroyStack(stack);
+    printf("[PASSOU] - Teste de Erro: Pilha Vazia (Underflow)\n");
+}
+
+// -------------------------------------------------------------
 // Ponto de Entrada dos Testes (main)
 // -------------------------------------------------------------
 int main(){
     // Cabeçalho da execução da suíte de testes
-    printf("\n=== RODANDO SUÍTE DE TESTES UNITÁRIOS ===\n\n");
+    printf("\n=== RODANDO SUÍTE DE TESTES UNITÁRIOS DA PILHA ===\n\n");
     
-    // Executa o caso de teste 1
+    // Executa os testes de uso normal
     test_createStack();
-    // Executa o caso de teste 2
     test_push();
-    // Executa o caso de teste 3
     test_pop();
+
+    // Executa os testes de cenários de erro / exceção
+    test_stackErrors_NullPointer();
+    test_stackErrors_EmptyStack();
 
     // Imprime a mensagem de sucesso total da suíte de testes
     printf("\n>>> TODOS OS TESTES PASSARAM COM SUCESSO! <<<\n\n");
