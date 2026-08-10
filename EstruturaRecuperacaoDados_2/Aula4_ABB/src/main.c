@@ -11,7 +11,7 @@ int main() {
     // Valida se a alocação de memória para o descritor da árvore obteve sucesso
     if (myTree != NULL){
         // Transfere o fluxo de controle para a interface do usuário (camada UI)
-        menu(myTree);
+        runMenu(myTree);
         
         // Ao encerrar o menu, garante a desalocação de todos os nós e do descritor (evita vazamentos de memória/memory leaks)
         freeTree(myTree);
